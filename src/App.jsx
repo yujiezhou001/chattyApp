@@ -3,6 +3,7 @@ import Nav from './nav.jsx';
 import Chatbar from './chatbar.jsx';
 import Message from './message.jsx';
 import Message_system from './message_system.jsx';
+// import ws from '../chatty_server/server';
 class App extends Component {
 
   constructor(props){
@@ -19,7 +20,7 @@ class App extends Component {
         content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
       }]
     };
-
+    this.socket = new WebSocket('ws://localhost:3001')
   }
 
   addMessage = (newMessage) => {
@@ -28,6 +29,7 @@ class App extends Component {
       username:this.state.currentUser.name,
       content:newMessage
     }
+    this.socket.send(JSON.stringify(newMessageObject))
     const oldMessages = this.state.messages;
     const newMessages = [...oldMessages, newMessageObject];
     this.setState({
@@ -36,6 +38,11 @@ class App extends Component {
   }
 
   componentDidMount() {
+
+      this.socket.onopen = function () {
+      console.log("Connected to server");
+    };
+
     console.log("componentDidMount <App />");
     setTimeout(() => {
       console.log("Simulating incoming message");
