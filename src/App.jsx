@@ -21,8 +21,9 @@ class App extends Component {
     //   }]
     // };
     this.state = {
-      currentUser: {name: "Bob"},
-      messages: [] // messages coming from the server will be stored here as they arrive
+      currentUser: {name: ""},
+      messages: [], // messages coming from the server will be stored here as they arrive
+      numberOfUsers: ""
     };
     this.socket = new WebSocket('ws://localhost:3001')
   }
@@ -73,6 +74,12 @@ class App extends Component {
         messages: newMessage,
         })
         break;
+      case "number":
+        console.log(incomingMessage)
+        this.setState({
+          numberOfUsers: incomingMessage
+        })
+        break;
       default:
         throw new Error("Unknown event type " + data.type);
     }
@@ -114,7 +121,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Nav />
+        <Nav numberOfUsers={this.state.numberOfUsers}/>
         <MessageList userMessage={this.state.messages}/>
         <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage} changeUserName={this.changeUserName}/>
         <Message_system />
