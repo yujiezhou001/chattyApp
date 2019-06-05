@@ -2,6 +2,8 @@
 
 const express = require('express');
 const SocketServer = require('ws').Server;
+const uuidv4 = require('uuid/v4');
+//need a unique id here, source of truth
 
 // Set the port to 3001
 const PORT = 3001;
@@ -23,11 +25,35 @@ wss.on('connection', (ws) => {
 
   ws.on('message', function incoming(message) {
     const messageObj = JSON.parse(message);
+    const id = uuidv4();
+    messageObj.id = id;
+
     console.log(`User ${messageObj.username} said ${messageObj.content}`);
+    switch (messageObj.type) {
+      case "postMessage":
+      messageObj.type = "incomingMessage"
+      console.log(messageObj)
+      wss.clients.forEach(function each(client) {
+        // if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(messageObj));
+        // }
+      });
+      break;
+      case "postNotification":
+      wss.clients.forEach(function each(client) {
+        // if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(messageObj));
+        // }
+      });
+
+    }
+    // uniqueId = uuidv4();
+    
+    // ws.send(JSON.stringify(newMessageObj));
   });
 
-
-  ws.send("somthing");//needs to be in 24 to 26
+  
+  // ws.send("somthing");//needs to be in 24 to 26
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => console.log('Client disconnected'));

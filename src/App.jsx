@@ -8,17 +8,21 @@ class App extends Component {
 
   constructor(props){
     super(props);
+    // this.state = {
+    //   currentUser: {name: "Anonymous"},
+    //   messages:[{
+    //     id: "1",
+    //     username: "Anonymous",
+    //     content: "Has anyone seen my marbles?"
+    //   },{
+    //     id: "2",
+    //     username: "Anonymous",
+    //     content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
+    //   }]
+    // };
     this.state = {
-      currentUser: {name: "Anonymous"},
-      messages:[{
-        id: "1",
-        username: "Anonymous",
-        content: "Has anyone seen my marbles?"
-      },{
-        id: "2",
-        username: "Anonymous",
-        content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-      }]
+      currentUser: {name: "Bob"},
+      messages: [] // messages coming from the server will be stored here as they arrive
     };
     this.socket = new WebSocket('ws://localhost:3001')
   }
@@ -27,21 +31,59 @@ class App extends Component {
     const newMessageObject ={
       id: this.state.messages.length + 1,
       username:this.state.currentUser.name,
-      content:newMessage
+      content:newMessage,
+      type: "postMessage"
     }
     this.socket.send(JSON.stringify(newMessageObject))
-    const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, newMessageObject];
-    this.setState({
-      messages: newMessages
-    });
+    // const oldMessages = this.state.messages;
+    // const newMessages = [...oldMessages, newMessageObject];
+    // this.setState({
+    //   messages: newMessages
+    // });
   }
+
+  changeUserName = (newUserName) => {
+    const newUserNameObj = {
+      username: newUserName,
+      type: "postNotification",
+      content:`User ${this.state.currentUser.name} changes name to ${newUserName}`
+    }
+    this.socket.send(JSON.stringify(newUserNameObj))
+    this.setState({
+      currentUser: {name: newUserName}
+      });
+  }
+
+
+  handleOnMessage = evt => {
+    const incomingMessage = JSON.parse(evt.data);
+    console.log("data", incomingMessage);
+    const oldMessages = this.state.messages;
+    const newMessages = [...oldMessages, incomingMessage];
+    this.setState({
+      messages: newMessages,
+      });
+  }
+  
 
   componentDidMount() {
 
       this.socket.onopen = function () {
       console.log("Connected to server");
-    };
+       };
+
+      this.socket.onmessage = this.handleOnMessage;
+
+      // this.socket.onmessage = function incoming(data) {
+      // const parsedMessage = JSON.parse(event.data)
+      // console.log("data", parsedMessage);
+      //
+      // const oldMessages = this.state.messages;
+      // const newMessages = [...oldMessages, parsedMessage];
+      // this.setState({
+      //   messages: newMessages
+      //  });
+
 
     console.log("componentDidMount <App />");
     setTimeout(() => {
@@ -61,7 +103,7 @@ class App extends Component {
       <div>
         <Nav />
         <Message userMessage={this.state.messages}/>
-        <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage}/>
+        <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage} changeUserName={this.changeUserName}/>
         <Message_system />
       </div>
     );
