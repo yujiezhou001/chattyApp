@@ -40,6 +40,7 @@ wss.on('connection', (ws) => {
       });
       break;
       case "postNotification":
+      // messageObj.type = "incomingNotification"
       wss.clients.forEach(function each(client) {
         // if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(messageObj));

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Nav from './nav.jsx';
 import Chatbar from './chatbar.jsx';
-import Message from './message.jsx';
+import MessageList from './messageList.jsx';
 import Message_system from './message_system.jsx';
 // import ws from '../chatty_server/server';
 class App extends Component {
@@ -57,12 +57,25 @@ class App extends Component {
 
   handleOnMessage = evt => {
     const incomingMessage = JSON.parse(evt.data);
-    console.log("data", incomingMessage);
-    const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, incomingMessage];
-    this.setState({
-      messages: newMessages,
-      });
+    switch(incomingMessage.type){
+      case "incomingMessage": 
+        console.log("data", incomingMessage);
+        const oldMessages = this.state.messages;
+        const newMessages = [...oldMessages, incomingMessage];
+        this.setState({
+        messages: newMessages,
+        });
+        break;
+      case "postNotification":
+        const oldMessage = this.state.messages;
+        const newMessage = [...oldMessage, incomingMessage];
+        this.setState({
+        messages: newMessage,
+        })
+        break;
+      default:
+        throw new Error("Unknown event type " + data.type);
+    }
   }
   
 
@@ -102,7 +115,7 @@ class App extends Component {
     return (
       <div>
         <Nav />
-        <Message userMessage={this.state.messages}/>
+        <MessageList userMessage={this.state.messages}/>
         <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage} changeUserName={this.changeUserName}/>
         <Message_system />
       </div>
