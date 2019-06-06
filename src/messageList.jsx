@@ -11,9 +11,9 @@ class MessageList extends Component {
         const messageList = this.props.userMessage.map(eachMessage => (
             (eachMessage.type === "incomingMessage") ? 
 
-              <Message key={eachMessage.id} id= {eachMessage.id} username={eachMessage.username} content={eachMessage.content}/>
+              <Message key={eachMessage.id} id= {eachMessage.id} username={eachMessage.username} content={eachMessage.content} color={eachMessage.color}/>
             :
-              <Notification key={eachMessage.id} id= {eachMessage.id} username={eachMessage.username} content={eachMessage.content}/>
+              <Notification key={eachMessage.id} id= {eachMessage.id} username={eachMessage.username} content={eachMessage.content} color={eachMessage.color}/>
           
         ))
       

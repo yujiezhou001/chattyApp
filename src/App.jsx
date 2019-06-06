@@ -33,6 +33,7 @@ class App extends Component {
 
   // This function takes name input from textbar and set it to backend server
   // as another message object which has a sending type
+
   changeUserName = (newUserName) => {
     const newUserNameObj = {
       username: newUserName,

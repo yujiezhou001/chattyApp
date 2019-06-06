@@ -19,11 +19,19 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
+// Create the set color function
+
+const getColor = () => {
+  return `#${uuidv4().slice(0, 6)}`;
+};
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 
 wss.on('connection', (ws) => {
+  //give each connected user a color
+  const userColor = getColor();
   console.log('Client connected');
   const userNumberObj = {};
   userNumberObj.number = wss.clients.size;
@@ -44,6 +52,7 @@ wss.on('connection', (ws) => {
     switch (messageObj.type) {
       case "postMessage":
       messageObj.type = "incomingMessage"
+      messageObj.color = userColor;
       console.log(messageObj)
 
       //broadcast message object to each connected user
@@ -53,6 +62,7 @@ wss.on('connection', (ws) => {
       break;
       case "postNotification":
       messageObj.type = "incomingNotification"
+      messageObj.color = userColor;
 
       //broadcast notification message object to each connected user
       wss.clients.forEach(function each(client) {
