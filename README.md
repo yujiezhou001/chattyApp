@@ -26,7 +26,7 @@ open http://localhost:3000
 This project includes React ESLint configuration.
 
 ```
-npm run lint
+npm run lint.
 ```
 
 ## Dependencies
