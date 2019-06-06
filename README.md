@@ -2,7 +2,7 @@
 
 ## Project Description
 
-ChattyApp allows users to chat to each other with their messsages displayed live and notifications shown if users change their usernames.
+ChattyApp allows multi-user communication with real-time udpates of their messsages displayed and notifications shown if users change their usernames.
 
 ## Screenshots
 
