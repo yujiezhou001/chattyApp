@@ -3,31 +3,23 @@ import Nav from './nav.jsx';
 import Chatbar from './chatbar.jsx';
 import MessageList from './messageList.jsx';
 import Message_system from './message_system.jsx';
-// import ws from '../chatty_server/server';
+
+// Main class which serves as the front-end server
 class App extends Component {
 
   constructor(props){
     super(props);
-    // this.state = {
-    //   currentUser: {name: "Anonymous"},
-    //   messages:[{
-    //     id: "1",
-    //     username: "Anonymous",
-    //     content: "Has anyone seen my marbles?"
-    //   },{
-    //     id: "2",
-    //     username: "Anonymous",
-    //     content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-    //   }]
-    // };
+
     this.state = {
-      currentUser: {name: ""},
+      currentUser: {name: "Anonymous"},
       messages: [], // messages coming from the server will be stored here as they arrive
       numberOfUsers: ""
     };
     this.socket = new WebSocket('ws://localhost:3001')
   }
 
+  // This function takes message input from textbar and send it to backend server
+  // as a message object which has a sending type
   addMessage = (newMessage) => {
     const newMessageObject ={
       id: this.state.messages.length + 1,
@@ -36,13 +28,11 @@ class App extends Component {
       type: "postMessage"
     }
     this.socket.send(JSON.stringify(newMessageObject))
-    // const oldMessages = this.state.messages;
-    // const newMessages = [...oldMessages, newMessageObject];
-    // this.setState({
-    //   messages: newMessages
-    // });
   }
 
+
+  // This function takes name input from textbar and set it to backend server
+  // as another message object which has a sending type
   changeUserName = (newUserName) => {
     const newUserNameObj = {
       username: newUserName,
@@ -55,19 +45,19 @@ class App extends Component {
       });
   }
 
-
+  // This function is the message handle function that handles incoming feedback
+  // from the backend server depending on the type assigned in the backend server
   handleOnMessage = evt => {
     const incomingMessage = JSON.parse(evt.data);
     switch(incomingMessage.type){
       case "incomingMessage": 
-        console.log("data", incomingMessage);
         const oldMessages = this.state.messages;
         const newMessages = [...oldMessages, incomingMessage];
         this.setState({
         messages: newMessages,
         });
         break;
-      case "postNotification":
+      case "incomingNotification":
         const oldMessage = this.state.messages;
         const newMessage = [...oldMessage, incomingMessage];
         this.setState({
@@ -75,7 +65,6 @@ class App extends Component {
         })
         break;
       case "number":
-        console.log(incomingMessage)
         this.setState({
           numberOfUsers: incomingMessage
         })
@@ -85,7 +74,7 @@ class App extends Component {
     }
   }
   
-
+  // Connect the backend server after everything is loaded
   componentDidMount() {
 
       this.socket.onopen = function () {
@@ -93,16 +82,6 @@ class App extends Component {
        };
 
       this.socket.onmessage = this.handleOnMessage;
-
-      // this.socket.onmessage = function incoming(data) {
-      // const parsedMessage = JSON.parse(event.data)
-      // console.log("data", parsedMessage);
-      //
-      // const oldMessages = this.state.messages;
-      // const newMessages = [...oldMessages, parsedMessage];
-      // this.setState({
-      //   messages: newMessages
-      //  });
 
 
     console.log("componentDidMount <App />");
@@ -117,7 +96,7 @@ class App extends Component {
     }, 3000);
   }
 
-
+  // Render each component to the page
   render() {
     return (
       <div>

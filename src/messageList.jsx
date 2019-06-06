@@ -1,10 +1,13 @@
+//Create messageList component using Message component
+
 import React, {Component} from "react";
 import Message from "./message.jsx";
 import Notification from "./message_system.jsx";
 class MessageList extends Component {
   
     render() {
-      
+        //For each message object, decide whether to make them message component
+        //or notification component  
         const messageList = this.props.userMessage.map(eachMessage => (
             (eachMessage.type === "incomingMessage") ? 
 

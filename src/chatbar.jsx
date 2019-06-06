@@ -1,26 +1,26 @@
+// Create chatbar component
+
 import React, {Component} from "react";
 class Chatbar extends Component {
   
-
   constructor(props){
     super(props)
     this.state = {
-    // _id: Math.random().toString(36).substring(7),
-    // username:this.props.currentUser.name,
     content:'',
     username:''
     }
   }
 
-
+  // set local state username to newly inputed value
   handleChangeName = event => {
     this.setState({username:event.target.value})
   }
 
+  // function that handles enter keydown action in username input
+  // change username by calling the function in App and clears the state and input
   handleKeyDownName = event => {
 
     if (event.key === "Enter"){
-      // event.preventDefault()
       console.log("this.state.username");
       this.props.changeUserName(this.state.username);
       event.target.value ='';
@@ -28,10 +28,14 @@ class Chatbar extends Component {
     }
   }
 
+  // set local state content to newly inputed value
   handleChange = event => {
     this.setState({content:event.target.value})
   }
 
+
+  // function that handles enter keydown action in message input
+  // change username by calling the function in App and clears the state and input
   handleKeyDown = event => {
 
     if (event.key === "Enter"){
@@ -42,6 +46,8 @@ class Chatbar extends Component {
       this.setState({content: ''})
     }
   }
+
+    // renders the chatbar component
     render() {
       return (
        <footer className="chatbar">

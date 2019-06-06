@@ -1,3 +1,5 @@
+//Create each message component
+
 import React, {Component} from "react";
 class Message extends Component {
   
