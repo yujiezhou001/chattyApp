@@ -6,10 +6,8 @@ ChattyApp allows users to chat to each other with their messsages displayed live
 
 ## Screenshots
 
-!["Screenshot of Start_Page"]()
-!["Screenshot of Multiple_ Messages"]()
-!["Screenshot of Notification"]()
-!["Screenshot of Multiple_Users"]()
+!["Screenshot of Start_Page"](docs/Main_Page.png)
+!["Screenshot of Multiple_ Messages"](docs/Multiple_Messages.png)
 
 
 ## Running the App
